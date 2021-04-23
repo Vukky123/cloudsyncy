@@ -1,0 +1,15 @@
+{
+    "minecraft": {
+        "overwriteExisting": true,
+        "local": [
+            "%appdata%\\.minecraft\\mods",
+            "%appdata%\\.minecraft\\resourcepacks",
+            "%appdata%\\.minecraft\\config"
+        ],
+        "cloud": [
+            "%userprofile%\\Google Drive\\.minecraft\\mods",
+            "%userprofile%\\Google Drive\\.minecraft\\resourcepacks",
+            "%userprofile%\\Google Drive\\.minecraft\\config"
+        ]
+    }
+}
