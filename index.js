@@ -10,11 +10,20 @@ console.log(`${chalk.green("cloudsyncy")} ${chalk.blueBright(packagejson.version
 let spinnery, origin, destination, loops, answerys;
 
 const displayCurrentFile = (src, dest) => {
-    if(config[answerys.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
-        return false;
-    }
-    if(config[answerys.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
-        return false;
+    if(answerys.mode == "Local to cloud") {
+        if(config[answerys.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
+            return false;
+        }
+        if(config[answerys.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
+            return false;
+        }
+    } else { 
+        if(config[answerys.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
+            return false;
+        }
+        if(config[answerys.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
+            return false;
+        }
     }
     spinnery.text = `Copying ${src} to ${dest}...`
     return true;
