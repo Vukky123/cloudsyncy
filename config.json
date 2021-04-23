@@ -11,6 +11,12 @@
             "%userprofile%\\Google Drive\\.minecraft\\mods",
             "%userprofile%\\Google Drive\\.minecraft\\resourcepacks",
             "%userprofile%\\Google Drive\\.minecraft\\config"
+        ],
+        "ignoreLocal": [
+            "%appdata%\\.minecraft\\config\\notenoughupdates\\repo"
+        ],
+        "ignoreCloud": [
+            
         ]
     }
 }

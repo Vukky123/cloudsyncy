@@ -7,9 +7,15 @@ const ora = require("ora");
 const path = require("path");
 console.clear();
 console.log(`${chalk.green("cloudsyncy")} ${chalk.blueBright(packagejson.version)}`);
-let spinnery, origin, destination, loops;
+let spinnery, origin, destination, loops, answerys;
 
 const displayCurrentFile = (src, dest) => {
+    if(config[answerys.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
+        return false;
+    }
+    if(config[answerys.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
+        return false;
+    }
     spinnery.text = `Copying ${src} to ${dest}...`
     return true;
 }
@@ -30,6 +36,7 @@ inquirer
     },
   ])
   .then(answers => {
+    answerys = answers;
     if(answers.mode == "Cloud to local") {
         origin = config[answers.type].cloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) });
         destination = config[answers.type].local.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) });

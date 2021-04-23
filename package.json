@@ -1,6 +1,6 @@
 {
   "name": "cloudsyncy",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Sync files from local to cloud and cloud to local.",
   "main": "index.js",
   "scripts": {
