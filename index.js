@@ -40,9 +40,14 @@ inquirer
         return console.error("Something doesn't seem right.");
     }
     let loops = 0;
-    function next() {
+    async function next() {
         let originy = origin[loops];
         let destinationy = destination[loops];
+        if(config[answers.type].deleteDestinationContentsBeforeCopy == true) {
+            spinnery = ora(`Deleting contents of ${destinationy}...`).start();
+            await fs.emptyDir(destinationy);
+            spinnery.succeed(`Deleted contents of ${destinationy}!`)
+        }
         spinnery = ora(`Copying ${originy} to ${destinationy}...`).start();
         fs.copy(originy, destinationy, { overwrite: config[answers.type].overwriteExisting, filter: displayCurrentFile }, function (err) {
             if (err) {
@@ -53,7 +58,7 @@ inquirer
               spinnery.succeed(`Copied ${originy} to ${destinationy}!`);
               loops += 1;
               if(loops === origin.length) {
-                console.log("\nAll done!");
+                console.log("\ncloudsyncy is done! Your files have been copied.");
               } else {
                 next();
               }

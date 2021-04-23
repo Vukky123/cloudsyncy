@@ -1,6 +1,7 @@
 {
     "minecraft": {
         "overwriteExisting": true,
+        "deleteDestinationContentsBeforeCopy": true,
         "local": [
             "%appdata%\\.minecraft\\mods",
             "%appdata%\\.minecraft\\resourcepacks",
