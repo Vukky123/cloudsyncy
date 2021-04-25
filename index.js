@@ -4,48 +4,67 @@ const chalk = require("chalk");
 const fs = require("fs-extra");
 const inquirer = require("inquirer");
 const ora = require("ora");
-const path = require("path");
 console.clear();
 console.log(`${chalk.green("cloudsyncy")} ${chalk.blueBright(packagejson.version)}`);
-let spinnery, origin, destination, loops, answerys;
+let spinnery, origin, destination, loops, answers, args;
+args = require('minimist')(process.argv.slice(2));
 
-const displayCurrentFile = (src, dest) => {
-    if(answerys.mode == "Local to cloud") {
-        if(config[answerys.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
-            return false;
-        }
-        if(config[answerys.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
-            return false;
-        }
-    } else { 
-        if(config[answerys.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
-            return false;
-        }
-        if(config[answerys.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
-            return false;
+// lol, if it works it works
+async function run() {
+    if(Object.keys(args).length < 2) {
+        answers = await inquirer.prompt([
+            {
+                type: 'list' ,
+                name: 'type',
+                message: 'Which configuration do you want to use?',
+                choices: Object.keys(config)
+            },
+            {
+                type: 'list',
+                name: 'mode',
+                message: 'Which mode do you want to use?',
+                choices: ["Cloud to local", "Local to cloud"]
+            },
+          ])
+    } else {
+        if(args.config && args.mode) {
+            answers = {};
+            if(!config[args.config]) {
+                console.log("That configuration doesn't exist. Please refer to the cloudsyncy config.json file.")
+                process.exit(1);
+            }
+            answers.type = args.config;
+            if(args.mode != "ltc" && args.mode != "ctl") {
+                console.log("Incorrect arguments passed, please read the README.");
+                process.exit(1);
+            }
+            if(args.mode == "ltc") answers.mode = "Local to cloud";
+            if(args.mode == "ctl") answers.mode = "Cloud to local";
+        } else {
+            console.log("Incorrect arguments passed, please read the README.");
+            process.exit(1);
         }
     }
-    spinnery.text = `Copying ${src} to ${dest}...`
-    return true;
-}
-
-inquirer
-  .prompt([
-    {
-        type: 'list',
-        name: 'type',
-        message: 'Which configuration do you want to use?',
-        choices: Object.keys(config)
-    },
-    {
-        type: 'list',
-        name: 'mode',
-        message: 'Which mode do you want to use?',
-        choices: ["Cloud to local", "Local to cloud"]
-    },
-  ])
-  .then(answers => {
-    answerys = answers;
+    const displayCurrentFile = (src, dest) => {
+        if(answers.mode == "Local to cloud") {
+            if(config[answers.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
+                return false;
+            }
+            if(config[answers.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
+                return false;
+            }
+        } else { 
+            if(config[answers.type].ignoreCloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(src)) {
+                return false;
+            }
+            if(config[answers.type].ignoreLocal.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) }).includes(dest)) {
+                return false;
+            }
+        }
+        spinnery.text = `Copying ${src} to ${dest}...`
+        return true;
+    }
+    
     if(answers.mode == "Cloud to local") {
         origin = config[answers.type].cloud.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) });
         destination = config[answers.type].local.map(function(x){ return x.replace(/%([^%]+)%/g, (_,n) => process.env[n]) });
@@ -55,7 +74,7 @@ inquirer
     } else {
         return console.error("Something doesn't seem right.");
     }
-    let loops = 0;
+    loops = 0;
     async function next() {
         let originy = origin[loops];
         let destinationy = destination[loops];
@@ -82,4 +101,5 @@ inquirer
         });
     }
     next();
-  })
+}
+run();

@@ -24,5 +24,13 @@ The name of the object will be used as the name in cloudsyncy.
 
 `ignoreCloud` (array) - A list of folders to ignore when copying files from cloud to local.
 
-## But why?
-Yeah Idunno. I didn't like repeatedly downloading Minecraft mods and resource packs across machines.
+## FAQ
+
+### Can cloudsyncy be ran without the fancy interactive picker at the start?
+Yes! If you pass arguments to cloudsyncy, it will skip the interactive picker.
+```
+node index --config minecraft --mode ctl
+```
+*important! cloudsyncy won't work if you use `-`, please use `--` for arguments.*
+
+`--config` is the name of the object in `config.json` to use, and `--mode` is the mode to use - `ctl` (cloud to local) or `ltc` (local to cloud).
