@@ -4,10 +4,15 @@ const chalk = require("chalk");
 const fs = require("fs-extra");
 const inquirer = require("inquirer");
 const ora = require("ora");
-console.clear();
-console.log(`${chalk.green("cloudsyncy")} ${chalk.blueBright(packagejson.version)}`);
+
 let spinnery, origin, destination, loops, answers, args;
 args = require('minimist')(process.argv.slice(2));
+
+function display() {
+    console.clear();
+    console.log(`${chalk.green("cloudsyncy")} ${chalk.blueBright(packagejson.version)}`);
+}
+display();
 
 // lol, if it works it works
 async function run() {
@@ -75,13 +80,16 @@ async function run() {
         return console.error("Something doesn't seem right.");
     }
     loops = 0;
+
+    display();
+    console.log(`Sweet! Let's copy your ${answers.type} files.\n`);
     async function next() {
         let originy = origin[loops];
         let destinationy = destination[loops];
         if(config[answers.type].deleteDestinationContentsBeforeCopy == true) {
             spinnery = ora(`Deleting contents of ${destinationy}...`).start();
             await fs.emptyDir(destinationy);
-            spinnery.succeed(`Deleted contents of ${destinationy}!`)
+            spinnery.stop();
         }
         spinnery = ora(`Copying ${originy} to ${destinationy}...`).start();
         fs.copy(originy, destinationy, { overwrite: config[answers.type].overwriteExisting, filter: displayCurrentFile }, function (err) {
