@@ -5,15 +5,21 @@
         "local": [
             "%appdata%\\.minecraft\\mods",
             "%appdata%\\.minecraft\\resourcepacks",
-            "%appdata%\\.minecraft\\config"
+            "%appdata%\\.minecraft\\config",
+            "%appdata%\\.minecraft\\wynntils",
+            "%appdata%\\.minecraft\\essential"
         ],
         "cloud": [
             "%userprofile%\\Google Drive\\.minecraft\\mods",
             "%userprofile%\\Google Drive\\.minecraft\\resourcepacks",
-            "%userprofile%\\Google Drive\\.minecraft\\config"
+            "%userprofile%\\Google Drive\\.minecraft\\config",
+            "%userprofile%\\Google Drive\\.minecraft\\wynntils",
+            "%userprofile%\\Google Drive\\.minecraft\\essential"
         ],
         "ignoreLocal": [
-            "%appdata%\\.minecraft\\config\\notenoughupdates\\repo"
+            "%appdata%\\.minecraft\\config\\notenoughupdates\\repo",
+            "%appdata%\\.minecraft\\essential\\cosmetic-cache",
+            "%appdata%\\.minecraft\\essential\\image-cache"
         ],
         "ignoreCloud": [
             
