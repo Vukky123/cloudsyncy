@@ -86,9 +86,9 @@ async function run() {
     async function next() {
         let originy = origin[loops];
         let destinationy = destination[loops];
-        if(config[answers.type].deleteDestinationContentsBeforeCopy == true) {
-            spinnery = ora(`Deleting contents of ${destinationy}...`).start();
-            await fs.emptyDir(destinationy);
+        if(config[answers.type].deleteBeforeCopy == true && fs.existsSync(destinationy)) {
+            spinnery = ora(`Deleting ${destinationy} first...`).start();
+            await fs.rmSync(destinationy, { recursive: true })
             spinnery.stop();
         }
         spinnery = ora(`Copying ${originy} to ${destinationy}...`).start();
